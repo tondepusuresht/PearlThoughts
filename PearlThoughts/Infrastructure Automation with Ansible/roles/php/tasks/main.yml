@@ -1,0 +1,28 @@
+- name: Clone php app (or pull latest)
+  git:
+    repo: https://github.com/test.git
+    dest: /opt/php-app
+    version: main
+
+- name: Build Docker image
+  docker_image:
+    name: php-app
+    build:
+      path: /opt/php-app
+
+- name: Create Docker network
+  docker_network:
+    name: phpnet
+    driver: overlay
+    scope: swarm
+  ignore_errors: yes
+
+- name: Deploy php service
+  shell: |
+    docker service create --name php-app \
+    --network phpnet \
+    -p 9000:9000 \
+    php-app
+  args:
+    executable: /bin/bash
+  ignore_errors: yes

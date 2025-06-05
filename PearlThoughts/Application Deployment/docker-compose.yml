@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  php:
+    image: php-app
+    ports:
+      - "9000:9000"
+    deploy:
+      replicas: 1
+    networks:
+      - phpnet
+
+networks:
+  phpnet:
+    driver: overlay
